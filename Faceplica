@@ -1,0 +1,36 @@
+# Faceplica — aedificatio libsic.a et instrumenta
+#
+# Usus:
+#   make -f Faceplica            — aedifica omnia
+#   make -f Faceplica proba      — curre probationes
+#   make -f Faceplica purga      — dele omnia aedificata
+
+CC       ?= cc
+AR       ?= ar
+CFLAGS   ?= -Wall -Wextra -pedantic -std=c99 -O2
+
+FONTES      = sic.c
+OBJECTA     = $(FONTES:.c=.o)
+BIBLIOTHECA = libsic.a
+
+omnia: $(BIBLIOTHECA) siclint
+
+%.o: %.c sic.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BIBLIOTHECA): $(OBJECTA)
+	$(AR) rcs $@ $(OBJECTA)
+	@echo "==> $(BIBLIOTHECA) aedificata"
+
+siclint: siclint.c $(BIBLIOTHECA)
+	$(CC) $(CFLAGS) $< -L. -lsic -o $@
+	@echo "==> siclint aedificatum"
+
+proba: $(BIBLIOTHECA) proba.c
+	$(CC) $(CFLAGS) proba.c -L. -lsic -o proba
+	./proba
+
+purga:
+	rm -f $(OBJECTA) $(BIBLIOTHECA) siclint proba
+
+.PHONY: omnia proba purga
