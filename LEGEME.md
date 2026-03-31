@@ -89,12 +89,23 @@ siclint -                          — lege ex stdin
 | `siclint.c` | instrumentum mandati lineae |
 | `proba.c` | probationes |
 | `Faceplica` | aedificatio |
+| `cancer/` | translatio Rustica |
 
 ## Probationes
 
 ```
 make -f Faceplica proba
 ```
+
+## Cancer
+
+Translatio Rustica in `cancer/` iacet. Nullae dependentiae externae.
+
+```
+cd cancer && cargo test
+```
+
+Paritas cum implementatione C servatur.
 
 ## Licentia
 

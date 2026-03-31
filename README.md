@@ -81,6 +81,14 @@ make -f Faceplica purga  # clean
 
 No `./configure`. No CMake. No pkg-config. Just `make`.
 
+## The Rust Port
+
+A complete, faithful Rust translation of SIC lives in `cancer/`. Every type, every function, every parsing edge case — faithfully reproduced in idiomatic Rust with zero external dependencies. The same XML goes in, the same DOM tree comes out, the same serialized XML comes back. Full namespace support, entity decoding, CDATA handling, UTF-8 BOM detection — everything the C implementation does, the Rust port does, with the same fidelity and the same zero-dependency philosophy.
+
+```bash
+cd cancer && cargo test
+```
+
 ## License
 
 Free. Public domain. Use however you like.

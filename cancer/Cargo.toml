@@ -1,0 +1,9 @@
+[package]
+name = "sic"
+version = "0.1.0"
+edition = "2021"
+description = "Sermo Inscriptionis Capax — dissector XML et arbor DOM sine dependentiis externis"
+
+[lib]
+name = "sic"
+path = "src/lib.rs"
