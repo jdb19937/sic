@@ -33,4 +33,7 @@ proba: $(BIBLIOTHECA) proba.c
 purga:
 	rm -f $(OBJECTA) $(BIBLIOTHECA) siclint proba
 
+linte:
+	insinulint -c sic.c sic.h siclint.c
+
 .PHONY: omnia proba purga

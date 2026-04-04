@@ -39,7 +39,8 @@ static void alv_push(alveus_t *a, char c)
 
 static void alv_cat(alveus_t *a, const char *s, size_t n)
 {
-    while (a->lon + n >= a->cap) a->cap *= 2;
+    while (a->lon + n >= a->cap)
+        a->cap *= 2;
     a->data = (char *)realloc(a->data, a->cap);
     memcpy(a->data + a->lon, s, n);
     a->lon += n;
@@ -57,10 +58,12 @@ static sic_char_t *alv_fini(alveus_t *a)
 
 static sic_char_t *dup_str(const sic_char_t *s)
 {
-    if (!s) return NULL;
-    size_t lon = strlen((const char *)s) + 1;
+    if (!s)
+        return NULL;
+    size_t lon    = strlen((const char *)s) + 1;
     sic_char_t *d = (sic_char_t *)malloc(lon);
-    if (d) memcpy(d, s, lon);
+    if (d)
+        memcpy(d, s, lon);
     return d;
 }
 
@@ -82,7 +85,8 @@ static void set_doc_r(sic_node_ptr_t nodus, sic_doc_ptr_t doc)
 static void link_child(sic_node_ptr_t parens, sic_node_ptr_t filius)
 {
     filius->parent = parens;
-    if (parens->doc) filius->doc = parens->doc;
+    if (parens->doc)
+        filius->doc = parens->doc;
     filius->next = NULL;
     filius->prev = parens->last;
     if (parens->last)
@@ -116,7 +120,8 @@ static void free_attr_list(sic_attr_ptr_t a)
 
 static void free_node_r(sic_node_ptr_t n)
 {
-    if (!n) return;
+    if (!n)
+        return;
     sic_node_ptr_t c = n->children;
     while (c) {
         sic_node_ptr_t prox = c->next;
@@ -141,7 +146,8 @@ static void attr_append(sic_node_ptr_t nodus, sic_attr_ptr_t a)
         nodus->properties = a;
     } else {
         sic_attr_ptr_t ult = nodus->properties;
-        while (ult->next) ult = ult->next;
+        while (ult->next)
+            ult = ult->next;
         ult->next = a;
         a->prev   = ult;
     }
@@ -154,7 +160,7 @@ static void attr_append(sic_node_ptr_t nodus, sic_attr_ptr_t a)
 sic_doc_ptr_t sic_new_doc(const sic_char_t *versio)
 {
     sic_doc_ptr_t doc = (sic_doc_ptr_t)calloc(1, sizeof(sic_doc_t));
-    doc->type    = SIC_DOCUMENT_NODE;
+    doc->type         = SIC_DOCUMENT_NODE;
     doc->version = versio
         ? dup_str(versio)
         : dup_str((const sic_char_t *)"1.0");
@@ -163,7 +169,8 @@ sic_doc_ptr_t sic_new_doc(const sic_char_t *versio)
 
 void sic_free_doc(sic_doc_ptr_t doc)
 {
-    if (!doc) return;
+    if (!doc)
+        return;
     sic_node_ptr_t c = doc->children;
     while (c) {
         sic_node_ptr_t prox = c->next;
@@ -177,24 +184,32 @@ void sic_free_doc(sic_doc_ptr_t doc)
 
 sic_node_ptr_t sic_doc_get_root_element(sic_doc_ptr_t doc)
 {
-    if (!doc) return NULL;
+    if (!doc)
+        return NULL;
     for (sic_node_ptr_t c = doc->children; c; c = c->next)
-        if (c->type == SIC_ELEMENT_NODE) return c;
+        if (c->type == SIC_ELEMENT_NODE)
+            return c;
     return NULL;
 }
 
-sic_node_ptr_t sic_doc_set_root_element(sic_doc_ptr_t doc,
-                                        sic_node_ptr_t radix)
-{
-    if (!doc || !radix) return NULL;
+sic_node_ptr_t sic_doc_set_root_element(
+    sic_doc_ptr_t doc,
+    sic_node_ptr_t radix
+) {
+    if (!doc || !radix)
+        return NULL;
 
     /* tolle radicem veterem */
     sic_node_ptr_t vetus = sic_doc_get_root_element(doc);
     if (vetus) {
-        if (vetus->prev) vetus->prev->next = vetus->next;
-        else doc->children = vetus->next;
-        if (vetus->next) vetus->next->prev = vetus->prev;
-        else doc->last = vetus->prev;
+        if (vetus->prev)
+            vetus->prev->next = vetus->next;
+        else
+            doc->children = vetus->next;
+        if (vetus->next)
+            vetus->next->prev = vetus->prev;
+        else
+            doc->last = vetus->prev;
         vetus->parent = NULL;
         vetus->prev   = NULL;
         vetus->next   = NULL;
@@ -235,12 +250,14 @@ sic_node_ptr_t sic_new_text(const sic_char_t *contentum)
     return n;
 }
 
-sic_node_ptr_t sic_new_child(sic_node_ptr_t parens, sic_ns_ptr_t ns,
-                             const sic_char_t *nomen,
-                             const sic_char_t *contentum)
-{
+sic_node_ptr_t sic_new_child(
+    sic_node_ptr_t parens, sic_ns_ptr_t ns,
+    const sic_char_t *nomen,
+    const sic_char_t *contentum
+) {
     sic_node_ptr_t n = sic_new_node(ns, nomen);
-    if (parens) link_child(parens, n);
+    if (parens)
+        link_child(parens, n);
     if (contentum) {
         sic_node_ptr_t t = sic_new_text(contentum);
         link_child(n, t);
@@ -248,10 +265,11 @@ sic_node_ptr_t sic_new_child(sic_node_ptr_t parens, sic_ns_ptr_t ns,
     return n;
 }
 
-sic_node_ptr_t sic_new_text_child(sic_node_ptr_t parens, sic_ns_ptr_t ns,
-                                  const sic_char_t *nomen,
-                                  const sic_char_t *contentum)
-{
+sic_node_ptr_t sic_new_text_child(
+    sic_node_ptr_t parens, sic_ns_ptr_t ns,
+    const sic_char_t *nomen,
+    const sic_char_t *contentum
+) {
     return sic_new_child(parens, ns, nomen, contentum);
 }
 
@@ -261,17 +279,22 @@ sic_node_ptr_t sic_new_text_child(sic_node_ptr_t parens, sic_ns_ptr_t ns,
 
 sic_node_ptr_t sic_add_child(sic_node_ptr_t parens, sic_node_ptr_t filius)
 {
-    if (!parens || !filius) return NULL;
-    if (filius->parent) sic_unlink_node(filius);
+    if (!parens || !filius)
+        return NULL;
+    if (filius->parent)
+        sic_unlink_node(filius);
     link_child(parens, filius);
     return filius;
 }
 
-sic_node_ptr_t sic_add_prev_sibling(sic_node_ptr_t frater,
-                                    sic_node_ptr_t novus)
-{
-    if (!frater || !novus) return NULL;
-    if (novus->parent) sic_unlink_node(novus);
+sic_node_ptr_t sic_add_prev_sibling(
+    sic_node_ptr_t frater,
+    sic_node_ptr_t novus
+) {
+    if (!frater || !novus)
+        return NULL;
+    if (novus->parent)
+        sic_unlink_node(novus);
 
     sic_node_ptr_t parens = frater->parent;
     novus->parent = parens;
@@ -290,7 +313,8 @@ sic_node_ptr_t sic_add_prev_sibling(sic_node_ptr_t frater,
 
 void sic_unlink_node(sic_node_ptr_t nodus)
 {
-    if (!nodus) return;
+    if (!nodus)
+        return;
     if (nodus->prev)
         nodus->prev->next = nodus->next;
     else if (nodus->parent)
@@ -317,37 +341,48 @@ void sic_free_node(sic_node_ptr_t nodus)
 
 sic_char_t *sic_get_prop(sic_node_ptr_t nodus, const sic_char_t *nomen)
 {
-    if (!nodus || !nomen) return NULL;
+    if (!nodus || !nomen)
+        return NULL;
     for (sic_attr_ptr_t a = nodus->properties; a; a = a->next)
-        if (!a->ns &&
-            strcmp((const char *)a->name, (const char *)nomen) == 0)
+        if (
+            !a->ns &&
+            strcmp((const char *)a->name, (const char *)nomen) == 0
+        )
             return a->value ? dup_str(a->value) : NULL;
     return NULL;
 }
 
-sic_char_t *sic_get_ns_prop(sic_node_ptr_t nodus,
-                            const sic_char_t *nomen,
-                            const sic_char_t *href)
-{
-    if (!nodus || !nomen) return NULL;
+sic_char_t *sic_get_ns_prop(
+    sic_node_ptr_t nodus,
+    const sic_char_t *nomen,
+    const sic_char_t *href
+) {
+    if (!nodus || !nomen)
+        return NULL;
     for (sic_attr_ptr_t a = nodus->properties; a; a = a->next)
-        if (strcmp((const char *)a->name, (const char *)nomen) == 0 &&
+        if (
+            strcmp((const char *)a->name, (const char *)nomen) == 0 &&
             a->ns && a->ns->href &&
-            strcmp((const char *)a->ns->href, (const char *)href) == 0)
+            strcmp((const char *)a->ns->href, (const char *)href) == 0
+        )
             return a->value ? dup_str(a->value) : NULL;
     return NULL;
 }
 
-sic_attr_ptr_t sic_set_prop(sic_node_ptr_t nodus,
-                            const sic_char_t *nomen,
-                            const sic_char_t *valor)
-{
-    if (!nodus || !nomen) return NULL;
+sic_attr_ptr_t sic_set_prop(
+    sic_node_ptr_t nodus,
+    const sic_char_t *nomen,
+    const sic_char_t *valor
+) {
+    if (!nodus || !nomen)
+        return NULL;
 
     /* quaere existentem */
     for (sic_attr_ptr_t a = nodus->properties; a; a = a->next) {
-        if (!a->ns &&
-            strcmp((const char *)a->name, (const char *)nomen) == 0) {
+        if (
+            !a->ns &&
+            strcmp((const char *)a->name, (const char *)nomen) == 0
+        ) {
             free(a->value);
             a->value = valor ? dup_str(valor) : NULL;
             return a;
@@ -363,15 +398,19 @@ sic_attr_ptr_t sic_set_prop(sic_node_ptr_t nodus,
     return a;
 }
 
-sic_attr_ptr_t sic_set_ns_prop(sic_node_ptr_t nodus, sic_ns_ptr_t ns,
-                               const sic_char_t *nomen,
-                               const sic_char_t *valor)
-{
-    if (!nodus || !nomen) return NULL;
+sic_attr_ptr_t sic_set_ns_prop(
+    sic_node_ptr_t nodus, sic_ns_ptr_t ns,
+    const sic_char_t *nomen,
+    const sic_char_t *valor
+) {
+    if (!nodus || !nomen)
+        return NULL;
 
     for (sic_attr_ptr_t a = nodus->properties; a; a = a->next) {
-        if (strcmp((const char *)a->name, (const char *)nomen) == 0 &&
-            a->ns == ns) {
+        if (
+            strcmp((const char *)a->name, (const char *)nomen) == 0 &&
+            a->ns == ns
+        ) {
             free(a->value);
             a->value = valor ? dup_str(valor) : NULL;
             return a;
@@ -389,13 +428,19 @@ sic_attr_ptr_t sic_set_ns_prop(sic_node_ptr_t nodus, sic_ns_ptr_t ns,
 
 int sic_unset_prop(sic_node_ptr_t nodus, const sic_char_t *nomen)
 {
-    if (!nodus || !nomen) return -1;
+    if (!nodus || !nomen)
+        return -1;
     for (sic_attr_ptr_t a = nodus->properties; a; a = a->next) {
-        if (!a->ns &&
-            strcmp((const char *)a->name, (const char *)nomen) == 0) {
-            if (a->prev) a->prev->next = a->next;
-            else nodus->properties = a->next;
-            if (a->next) a->next->prev = a->prev;
+        if (
+            !a->ns &&
+            strcmp((const char *)a->name, (const char *)nomen) == 0
+        ) {
+            if (a->prev)
+                a->prev->next = a->next;
+            else
+                nodus->properties = a->next;
+            if (a->next)
+                a->next->prev = a->prev;
             free((void *)a->name);
             free(a->value);
             free(a);
@@ -409,13 +454,14 @@ int sic_unset_prop(sic_node_ptr_t nodus, const sic_char_t *nomen)
  * spatia nominum
  * ================================================================ */
 
-sic_ns_ptr_t sic_new_ns(sic_node_ptr_t nodus,
-                        const sic_char_t *href,
-                        const sic_char_t *praefixum)
-{
+sic_ns_ptr_t sic_new_ns(
+    sic_node_ptr_t nodus,
+    const sic_char_t *href,
+    const sic_char_t *praefixum
+) {
     sic_ns_ptr_t ns = (sic_ns_ptr_t)calloc(1, sizeof(sic_ns_t));
-    ns->href   = href ? dup_str(href) : NULL;
-    ns->prefix = praefixum ? dup_str(praefixum) : NULL;
+    ns->href        = href ? dup_str(href) : NULL;
+    ns->prefix      = praefixum ? dup_str(praefixum) : NULL;
     if (nodus) {
         ns->next     = nodus->nsDef;
         nodus->nsDef = ns;
@@ -425,19 +471,24 @@ sic_ns_ptr_t sic_new_ns(sic_node_ptr_t nodus,
 
 void sic_set_ns(sic_node_ptr_t nodus, sic_ns_ptr_t ns)
 {
-    if (nodus) nodus->ns = ns;
+    if (nodus)
+        nodus->ns = ns;
 }
 
-sic_ns_ptr_t sic_search_ns_by_href(sic_doc_ptr_t doc,
-                                   sic_node_ptr_t nodus,
-                                   const sic_char_t *href)
-{
+sic_ns_ptr_t sic_search_ns_by_href(
+    sic_doc_ptr_t doc,
+    sic_node_ptr_t nodus,
+    const sic_char_t *href
+) {
     (void)doc;
-    if (!href) return NULL;
+    if (!href)
+        return NULL;
     for (sic_node_ptr_t n = nodus; n; n = n->parent)
         for (sic_ns_ptr_t ns = n->nsDef; ns; ns = ns->next)
-            if (ns->href &&
-                strcmp((const char *)ns->href, (const char *)href) == 0)
+            if (
+                ns->href &&
+                strcmp((const char *)ns->href, (const char *)href) == 0
+            )
                 return ns;
     return NULL;
 }
@@ -448,9 +499,12 @@ sic_ns_ptr_t sic_search_ns_by_href(sic_doc_ptr_t doc,
 
 int sic_strcmp(const sic_char_t *s1, const sic_char_t *s2)
 {
-    if (s1 == s2) return 0;
-    if (!s1) return -1;
-    if (!s2) return 1;
+    if (s1 == s2)
+        return 0;
+    if (!s1)
+        return -1;
+    if (!s2)
+        return 1;
     return strcmp((const char *)s1, (const char *)s2);
 }
 
@@ -458,10 +512,16 @@ int sic_strcmp(const sic_char_t *s1, const sic_char_t *s2)
 static void collect_text(sic_node_ptr_t nodus, alveus_t *a)
 {
     for (sic_node_ptr_t c = nodus->children; c; c = c->next) {
-        if ((c->type == SIC_TEXT_NODE ||
-             c->type == SIC_CDATA_SECTION_NODE) && c->content)
-            alv_cat(a, (const char *)c->content,
-                    strlen((const char *)c->content));
+        if (
+            (
+                c->type == SIC_TEXT_NODE ||
+                c->type == SIC_CDATA_SECTION_NODE
+            ) && c->content
+        )
+            alv_cat(
+                a, (const char *)c->content,
+                strlen((const char *)c->content)
+            );
         else if (c->type == SIC_ELEMENT_NODE)
             collect_text(c, a);
     }
@@ -469,9 +529,12 @@ static void collect_text(sic_node_ptr_t nodus, alveus_t *a)
 
 sic_char_t *sic_node_get_content(sic_node_ptr_t nodus)
 {
-    if (!nodus) return NULL;
-    if (nodus->type == SIC_TEXT_NODE ||
-        nodus->type == SIC_CDATA_SECTION_NODE)
+    if (!nodus)
+        return NULL;
+    if (
+        nodus->type == SIC_TEXT_NODE ||
+        nodus->type == SIC_CDATA_SECTION_NODE
+    )
         return nodus->content ? dup_str(nodus->content) : NULL;
 
     alveus_t a;
@@ -499,20 +562,25 @@ typedef struct {
 static int  d_eof(dctx_t *d)      { return d->cur >= d->finis; }
 static int  d_peek(dctx_t *d)     { return d_eof(d) ? -1 : (unsigned char)*d->cur; }
 static int  d_eat(dctx_t *d)      { return d_eof(d) ? -1 : (unsigned char)*d->cur++; }
-static void d_skip_ws(dctx_t *d)  { while (!d_eof(d) && isspace((unsigned char)*d->cur)) d->cur++; }
+static void d_skip_ws(dctx_t *d)  { while (!d_eof(d) && isspace((unsigned char)*d->cur))
+    d->cur++; }
 
 static int d_looking_at(dctx_t *d, const char *s)
 {
     size_t lon = strlen(s);
-    return ((size_t)(d->finis - d->cur) >= lon &&
-            memcmp(d->cur, s, lon) == 0);
+    return (
+        (size_t)(d->finis - d->cur) >= lon &&
+        memcmp(d->cur, s, lon) == 0
+    );
 }
 
 static int d_match(dctx_t *d, const char *s)
 {
     size_t lon = strlen(s);
-    if ((size_t)(d->finis - d->cur) < lon ||
-        memcmp(d->cur, s, lon) != 0) return 0;
+    if (
+        (size_t)(d->finis - d->cur) < lon ||
+        memcmp(d->cur, s, lon) != 0
+    ) return 0;
     d->cur += lon;
     return 1;
 }
@@ -521,17 +589,21 @@ static int d_match(dctx_t *d, const char *s)
 
 static int est_nomen_c(int c, int primus)
 {
-    if (isalpha(c) || c == '_') return 1;
-    if (primus) return 0;
+    if (isalpha(c) || c == '_')
+        return 1;
+    if (primus)
+        return 0;
     return (isdigit(c) || c == '-' || c == '.' || c == ':');
 }
 
 static sic_char_t *d_nomen(dctx_t *d)
 {
-    if (d_eof(d) || !est_nomen_c(d_peek(d), 1)) return NULL;
+    if (d_eof(d) || !est_nomen_c(d_peek(d), 1))
+        return NULL;
     const char *initium = d->cur;
-    while (!d_eof(d) && est_nomen_c(d_peek(d), 0)) d->cur++;
-    size_t lon = (size_t)(d->cur - initium);
+    while (!d_eof(d) && est_nomen_c(d_peek(d), 0))
+        d->cur++;
+    size_t lon    = (size_t)(d->cur - initium);
     sic_char_t *s = (sic_char_t *)malloc(lon + 1);
     memcpy(s, initium, lon);
     s[lon] = '\0';
@@ -543,11 +615,31 @@ static sic_char_t *d_nomen(dctx_t *d)
 static void d_entitas(dctx_t *d, alveus_t *a)
 {
     d->cur++; /* praeterire '&' */
-    if (d_looking_at(d, "amp;"))  { d->cur += 4; alv_push(a, '&');  return; }
-    if (d_looking_at(d, "lt;"))   { d->cur += 3; alv_push(a, '<');  return; }
-    if (d_looking_at(d, "gt;"))   { d->cur += 3; alv_push(a, '>');  return; }
-    if (d_looking_at(d, "quot;")) { d->cur += 5; alv_push(a, '"');  return; }
-    if (d_looking_at(d, "apos;")) { d->cur += 5; alv_push(a, '\''); return; }
+    if (d_looking_at(d, "amp;"))  {
+        d->cur += 4;
+        alv_push(a, '&');
+        return;
+    }
+    if (d_looking_at(d, "lt;"))   {
+        d->cur += 3;
+        alv_push(a, '<');
+        return;
+    }
+    if (d_looking_at(d, "gt;"))   {
+        d->cur += 3;
+        alv_push(a, '>');
+        return;
+    }
+    if (d_looking_at(d, "quot;")) {
+        d->cur += 5;
+        alv_push(a, '"');
+        return;
+    }
+    if (d_looking_at(d, "apos;")) {
+        d->cur += 5;
+        alv_push(a, '\'');
+        return;
+    }
     if (d_peek(d) == '#') {
         d->cur++;
         unsigned int codex = 0;
@@ -555,9 +647,12 @@ static void d_entitas(dctx_t *d, alveus_t *a)
             d->cur++;
             while (!d_eof(d) && d_peek(d) != ';') {
                 int c = d_eat(d);
-                if      (c >= '0' && c <= '9') codex = codex * 16 + (unsigned)(c - '0');
-                else if (c >= 'a' && c <= 'f') codex = codex * 16 + (unsigned)(c - 'a' + 10);
-                else if (c >= 'A' && c <= 'F') codex = codex * 16 + (unsigned)(c - 'A' + 10);
+                if      (c >= '0' && c <= '9')
+                    codex = codex * 16 + (unsigned)(c - '0');
+                else if (c >= 'a' && c <= 'f')
+                    codex = codex * 16 + (unsigned)(c - 'a' + 10);
+                else if (c >= 'A' && c <= 'F')
+                    codex = codex * 16 + (unsigned)(c - 'A' + 10);
             }
         } else {
             while (!d_eof(d) && d_peek(d) != ';') {
@@ -567,7 +662,8 @@ static void d_entitas(dctx_t *d, alveus_t *a)
                 d->cur++;
             }
         }
-        if (!d_eof(d)) d->cur++; /* ';' */
+        if (!d_eof(d))
+            d->cur++; /* ';' */
         /* codifica UTF-8 */
         if (codex < 0x80) {
             alv_push(a, (char)codex);
@@ -595,7 +691,8 @@ static void d_entitas(dctx_t *d, alveus_t *a)
 static sic_char_t *d_valor_attr(dctx_t *d)
 {
     int apex = d_eat(d);
-    if (apex != '"' && apex != '\'') return NULL;
+    if (apex != '"' && apex != '\'')
+        return NULL;
     alveus_t a;
     alv_init(&a);
     while (!d_eof(d) && d_peek(d) != apex) {
@@ -604,7 +701,8 @@ static sic_char_t *d_valor_attr(dctx_t *d)
         else
             alv_push(&a, (char)d_eat(d));
     }
-    if (!d_eof(d)) d->cur++; /* apex claudens */
+    if (!d_eof(d))
+        d->cur++; /* apex claudens */
     return alv_fini(&a);
 }
 
@@ -613,15 +711,19 @@ static sic_char_t *d_valor_attr(dctx_t *d)
 static void d_praeter_commentarium(dctx_t *d)
 {
     d->cur += 4; /* "<!--" */
-    while (!d_eof(d) && !d_looking_at(d, "-->")) d->cur++;
-    if (d_looking_at(d, "-->")) d->cur += 3;
+    while (!d_eof(d) && !d_looking_at(d, "-->"))
+        d->cur++;
+    if (d_looking_at(d, "-->"))
+        d->cur += 3;
 }
 
 static void d_praeter_pi(dctx_t *d)
 {
     d->cur += 2; /* "<?" */
-    while (!d_eof(d) && !d_looking_at(d, "?>")) d->cur++;
-    if (d_looking_at(d, "?>")) d->cur += 2;
+    while (!d_eof(d) && !d_looking_at(d, "?>"))
+        d->cur++;
+    if (d_looking_at(d, "?>"))
+        d->cur += 2;
 }
 
 static void d_praeter_doctype(dctx_t *d)
@@ -630,10 +732,18 @@ static void d_praeter_doctype(dctx_t *d)
     int altitudo = 0;
     while (!d_eof(d)) {
         int c = d_peek(d);
-        if      (c == '[') { altitudo++; d->cur++; }
-        else if (c == ']') { altitudo--; d->cur++; }
-        else if (c == '>' && altitudo == 0) { d->cur++; return; }
-        else d->cur++;
+        if (c == '[') {
+            altitudo++;
+            d->cur++;
+        } else if (c == ']') {
+            altitudo--;
+            d->cur++;
+        } else if (c == '>' && altitudo == 0) {
+            d->cur++;
+            return;
+        } else {
+            d->cur++;
+        }
     }
 }
 
@@ -643,9 +753,11 @@ static sic_node_ptr_t d_cdata(dctx_t *d)
 {
     d->cur += 9; /* "<![CDATA[" */
     const char *initium = d->cur;
-    while (!d_eof(d) && !d_looking_at(d, "]]>")) d->cur++;
+    while (!d_eof(d) && !d_looking_at(d, "]]>"))
+        d->cur++;
     size_t lon = (size_t)(d->cur - initium);
-    if (d_looking_at(d, "]]>")) d->cur += 3;
+    if (d_looking_at(d, "]]>"))
+        d->cur += 3;
 
     sic_node_ptr_t n = (sic_node_ptr_t)calloc(1, sizeof(sic_node_t));
     n->type    = SIC_TEXT_NODE;
@@ -668,7 +780,10 @@ static sic_node_ptr_t d_textus(dctx_t *d)
         else
             alv_push(&a, (char)d_eat(d));
     }
-    if (a.lon == 0) { free(a.data); return NULL; }
+    if (a.lon == 0) {
+        free(a.data);
+        return NULL;
+    }
 
     sic_node_ptr_t n = (sic_node_ptr_t)calloc(1, sizeof(sic_node_t));
     n->type    = SIC_TEXT_NODE;
@@ -680,23 +795,29 @@ static sic_node_ptr_t d_textus(dctx_t *d)
 /* est chorda tota ex spatiis? */
 static int est_vacua(const sic_char_t *s)
 {
-    if (!s) return 1;
+    if (!s)
+        return 1;
     for (; *s; s++)
-        if (!isspace(*s)) return 0;
+        if (!isspace(*s))
+            return 0;
     return 1;
 }
 
 /* quaere spatium nominum per praefixum, sursum per arborem */
-static sic_ns_ptr_t find_ns_prefix(sic_node_ptr_t nodus,
-                                   const char *praef)
-{
+static sic_ns_ptr_t find_ns_prefix(
+    sic_node_ptr_t nodus,
+    const char *praef
+) {
     for (sic_node_ptr_t n = nodus; n; n = n->parent)
         for (sic_ns_ptr_t ns = n->nsDef; ns; ns = ns->next) {
-            if (!praef && !ns->prefix) return ns;
-            if (praef && ns->prefix &&
-                strcmp(praef, (const char *)ns->prefix) == 0)
-                return ns;
-        }
+        if (!praef && !ns->prefix)
+            return ns;
+        if (
+            praef && ns->prefix &&
+            strcmp(praef, (const char *)ns->prefix) == 0
+        )
+            return ns;
+    }
     return NULL;
 }
 
@@ -708,21 +829,28 @@ static void d_contentum(dctx_t *d, sic_node_ptr_t parens);
 static sic_node_ptr_t d_elementum(dctx_t *d, sic_node_ptr_t parens_ctx)
 {
     sic_char_t *nomen_plenum = d_nomen(d);
-    if (!nomen_plenum) return NULL;
+    if (!nomen_plenum)
+        return NULL;
 
     /* lege attributa in indicem temporalem */
-    typedef struct { sic_char_t *nom; sic_char_t *val; } par_t;
+    typedef struct {
+        sic_char_t *nom;
+        sic_char_t *val;
+    }par_t;
     par_t paria[256];
     int n_paria = 0;
 
     while (!d_eof(d)) {
         d_skip_ws(d);
         int c = d_peek(d);
-        if (c == '/' || c == '>') break;
+        if (c == '/' || c == '>')
+            break;
         sic_char_t *an = d_nomen(d);
-        if (!an) break;
+        if (!an)
+            break;
         d_skip_ws(d);
-        if (d_peek(d) == '=') d->cur++;
+        if (d_peek(d) == '=')
+            d->cur++;
         d_skip_ws(d);
         sic_char_t *av = d_valor_attr(d);
         if (n_paria < 256) {
@@ -746,18 +874,18 @@ static sic_node_ptr_t d_elementum(dctx_t *d, sic_node_ptr_t parens_ctx)
         const char *n = (const char *)paria[i].nom;
         if (strcmp(n, "xmlns") == 0) {
             sic_ns_ptr_t ns = (sic_ns_ptr_t)calloc(1, sizeof(sic_ns_t));
-            ns->href     = paria[i].val;
-            ns->prefix   = NULL;
-            ns->next     = nodus->nsDef;
-            nodus->nsDef = ns;
+            ns->href        = paria[i].val;
+            ns->prefix      = NULL;
+            ns->next        = nodus->nsDef;
+            nodus->nsDef    = ns;
             free(paria[i].nom);
             paria[i].nom = NULL;
         } else if (strncmp(n, "xmlns:", 6) == 0) {
             sic_ns_ptr_t ns = (sic_ns_ptr_t)calloc(1, sizeof(sic_ns_t));
-            ns->href     = paria[i].val;
-            ns->prefix   = dup_str((const sic_char_t *)(n + 6));
-            ns->next     = nodus->nsDef;
-            nodus->nsDef = ns;
+            ns->href        = paria[i].val;
+            ns->prefix      = dup_str((const sic_char_t *)(n + 6));
+            ns->next        = nodus->nsDef;
+            nodus->nsDef    = ns;
             free(paria[i].nom);
             paria[i].nom = NULL;
         }
@@ -766,7 +894,7 @@ static sic_node_ptr_t d_elementum(dctx_t *d, sic_node_ptr_t parens_ctx)
     /* resolve nomen elementi */
     char *colon = strchr((char *)nomen_plenum, ':');
     if (colon) {
-        *colon = '\0';
+        *colon      = '\0';
         nodus->name = dup_str((const sic_char_t *)(colon + 1));
         nodus->ns   = find_ns_prefix(nodus, (const char *)nomen_plenum);
         free(nomen_plenum);
@@ -777,7 +905,8 @@ static sic_node_ptr_t d_elementum(dctx_t *d, sic_node_ptr_t parens_ctx)
 
     /* secundo transitu: crea attributa */
     for (int i = 0; i < n_paria; i++) {
-        if (!paria[i].nom) continue;
+        if (!paria[i].nom)
+            continue;
         sic_attr_ptr_t a = (sic_attr_ptr_t)calloc(1, sizeof(sic_attr_t));
         a->type   = SIC_ATTRIBUTE_NODE;
         a->parent = nodus;
@@ -786,8 +915,10 @@ static sic_node_ptr_t d_elementum(dctx_t *d, sic_node_ptr_t parens_ctx)
         colon = strchr((char *)paria[i].nom, ':');
         if (colon) {
             *colon = '\0';
-            a->ns   = find_ns_prefix(nodus,
-                                     (const char *)paria[i].nom);
+            a->ns   = find_ns_prefix(
+                nodus,
+                (const char *)paria[i].nom
+            );
             a->name = dup_str((const sic_char_t *)(colon + 1));
             free(paria[i].nom);
         } else {
@@ -800,7 +931,8 @@ static sic_node_ptr_t d_elementum(dctx_t *d, sic_node_ptr_t parens_ctx)
     /* elementum clausum vel apertum? */
     if (d_match(d, "/>"))
         return nodus;
-    if (!d_eof(d)) d->cur++; /* '>' */
+    if (!d_eof(d))
+        d->cur++; /* '>' */
 
     /* disseca filios */
     d_contentum(d, nodus);
@@ -810,7 +942,8 @@ static sic_node_ptr_t d_elementum(dctx_t *d, sic_node_ptr_t parens_ctx)
         sic_char_t *claudens = d_nomen(d);
         free(claudens);
         d_skip_ws(d);
-        if (!d_eof(d) && d_peek(d) == '>') d->cur++;
+        if (!d_eof(d) && d_peek(d) == '>')
+            d->cur++;
     }
 
     return nodus;
@@ -829,7 +962,8 @@ static void d_contentum(dctx_t *d, sic_node_ptr_t parens)
             }
             if (d_looking_at(d, "<![CDATA[")) {
                 sic_node_ptr_t c = d_cdata(d);
-                if (c) link_child(parens, c);
+                if (c)
+                    link_child(parens, c);
                 continue;
             }
             if (d_looking_at(d, "<?")) {
@@ -839,12 +973,15 @@ static void d_contentum(dctx_t *d, sic_node_ptr_t parens)
             /* elementum filium */
             d->cur++; /* '<' */
             sic_node_ptr_t c = d_elementum(d, parens);
-            if (c) link_child(parens, c);
+            if (c)
+                link_child(parens, c);
         } else {
             sic_node_ptr_t t = d_textus(d);
             if (t) {
-                if ((d->vexilla & SIC_PARSE_NOBLANKS) &&
-                    est_vacua(t->content))
+                if (
+                    (d->vexilla & SIC_PARSE_NOBLANKS) &&
+                    est_vacua(t->content)
+                )
                     free_node_r(t);
                 else
                     link_child(parens, t);
@@ -856,14 +993,17 @@ static void d_contentum(dctx_t *d, sic_node_ptr_t parens)
 /* disseca declarationem XML <?xml ...?> */
 static void d_xml_decl(dctx_t *d)
 {
-    if (!d_looking_at(d, "<?xml")) return;
+    if (!d_looking_at(d, "<?xml"))
+        return;
     d->cur += 5;
     while (!d_eof(d) && !d_looking_at(d, "?>")) {
         d_skip_ws(d);
-        if (d_looking_at(d, "?>")) break;
+        if (d_looking_at(d, "?>"))
+            break;
         sic_char_t *nom = d_nomen(d);
         d_skip_ws(d);
-        if (!d_eof(d) && d_peek(d) == '=') d->cur++;
+        if (!d_eof(d) && d_peek(d) == '=')
+            d->cur++;
         d_skip_ws(d);
         sic_char_t *val = d_valor_attr(d);
         if (nom && val) {
@@ -883,39 +1023,50 @@ static void d_xml_decl(dctx_t *d)
         free(nom);
         free(val);
     }
-    if (d_looking_at(d, "?>")) d->cur += 2;
+    if (d_looking_at(d, "?>"))
+        d->cur += 2;
 }
 
 /* --- lege plicam XML --- */
 
-sic_doc_ptr_t sic_read_file(const char *via,
-                            const char *codificatio,
-                            int optiones)
-{
+sic_doc_ptr_t sic_read_file(
+    const char *via,
+    const char *codificatio,
+    int optiones
+) {
     (void)codificatio;
     FILE *fp = fopen(via, "rb");
-    if (!fp) return NULL;
+    if (!fp)
+        return NULL;
 
     fseek(fp, 0, SEEK_END);
     long magnitudo = ftell(fp);
-    if (magnitudo < 0) { fclose(fp); return NULL; }
+    if (magnitudo < 0) {
+        fclose(fp);
+        return NULL;
+    }
     fseek(fp, 0, SEEK_SET);
 
     char *alveus = (char *)malloc((size_t)magnitudo + 1);
-    if (!alveus) { fclose(fp); return NULL; }
-    size_t lectum = fread(alveus, 1, (size_t)magnitudo, fp);
+    if (!alveus) {
+        fclose(fp);
+        return NULL;
+    }
+    size_t lectum  = fread(alveus, 1, (size_t)magnitudo, fp);
     alveus[lectum] = '\0';
     fclose(fp);
 
     sic_doc_ptr_t doc = (sic_doc_ptr_t)calloc(1, sizeof(sic_doc_t));
-    doc->type = SIC_DOCUMENT_NODE;
+    doc->type         = SIC_DOCUMENT_NODE;
 
     const char *c = alveus;
     /* praeterire BOM UTF-8 */
-    if (lectum >= 3 &&
+    if (
+        lectum >= 3 &&
         (unsigned char)c[0] == 0xEF &&
         (unsigned char)c[1] == 0xBB &&
-        (unsigned char)c[2] == 0xBF)
+        (unsigned char)c[2] == 0xBF
+    )
         c += 3;
 
     dctx_t ctx = { c, alveus + lectum, doc, optiones };
@@ -926,9 +1077,19 @@ sic_doc_ptr_t sic_read_file(const char *via,
     /* praeterire miscella ante radicem */
     while (!d_eof(&ctx)) {
         d_skip_ws(&ctx);
-        if (d_looking_at(&ctx, "<!--"))      { d_praeter_commentarium(&ctx); continue; }
-        if (d_looking_at(&ctx, "<?"))        { d_praeter_pi(&ctx); continue; }
-        if (d_looking_at(&ctx, "<!DOCTYPE")) { ctx.cur += 9; d_praeter_doctype(&ctx); continue; }
+        if (d_looking_at(&ctx, "<!--"))      {
+            d_praeter_commentarium(&ctx);
+            continue;
+        }
+        if (d_looking_at(&ctx, "<?"))        {
+            d_praeter_pi(&ctx);
+            continue;
+        }
+        if (d_looking_at(&ctx, "<!DOCTYPE")) {
+            ctx.cur += 9;
+            d_praeter_doctype(&ctx);
+            continue;
+        }
         break;
     }
 
@@ -956,33 +1117,48 @@ sic_doc_ptr_t sic_read_file(const char *via,
 
 static void w_escaped(FILE *fp, const sic_char_t *s, int attr)
 {
-    if (!s) return;
+    if (!s)
+        return;
     for (; *s; s++) {
         switch (*s) {
         case '&': fputs("&amp;", fp);  break;
         case '<': fputs("&lt;", fp);   break;
-        case '>': if (!attr) fputs("&gt;", fp); else fputc(*s, fp); break;
-        case '"': if (attr) fputs("&quot;", fp); else fputc(*s, fp); break;
+        case '>': if (!attr)
+                fputs("&gt;", fp);
+            else
+                fputc(*s, fp);
+            break;
+        case '"': if (attr)
+                fputs("&quot;", fp);
+            else
+                fputc(*s, fp);
+            break;
         default:  fputc(*s, fp);       break;
         }
     }
 }
 
-static void w_nodus(FILE *fp, sic_node_ptr_t nodus, int altitudo,
-                    int forma)
-{
-    if (!nodus) return;
+static void w_nodus(
+    FILE *fp, sic_node_ptr_t nodus, int altitudo,
+    int forma
+) {
+    if (!nodus)
+        return;
 
-    if (nodus->type == SIC_TEXT_NODE ||
-        nodus->type == SIC_CDATA_SECTION_NODE) {
+    if (
+        nodus->type == SIC_TEXT_NODE ||
+        nodus->type == SIC_CDATA_SECTION_NODE
+    ) {
         w_escaped(fp, nodus->content, 0);
         return;
     }
-    if (nodus->type != SIC_ELEMENT_NODE) return;
+    if (nodus->type != SIC_ELEMENT_NODE)
+        return;
 
     if (forma && altitudo > 0) {
         fputc('\n', fp);
-        for (int i = 0; i < altitudo; i++) fputs("  ", fp);
+        for (int i = 0; i < altitudo; i++)
+            fputs("  ", fp);
     }
 
     fputc('<', fp);
@@ -1020,14 +1196,18 @@ static void w_nodus(FILE *fp, sic_node_ptr_t nodus, int altitudo,
     /* habet filios elementorum? */
     int habet_elem = 0;
     for (sic_node_ptr_t c = nodus->children; c; c = c->next)
-        if (c->type == SIC_ELEMENT_NODE) { habet_elem = 1; break; }
+        if (c->type == SIC_ELEMENT_NODE) {
+        habet_elem = 1;
+        break;
+    }
 
     for (sic_node_ptr_t c = nodus->children; c; c = c->next)
         w_nodus(fp, c, altitudo + 1, forma && habet_elem);
 
     if (forma && habet_elem) {
         fputc('\n', fp);
-        for (int i = 0; i < altitudo; i++) fputs("  ", fp);
+        for (int i = 0; i < altitudo; i++)
+            fputs("  ", fp);
     }
 
     fputs("</", fp);
@@ -1036,13 +1216,17 @@ static void w_nodus(FILE *fp, sic_node_ptr_t nodus, int altitudo,
     fprintf(fp, "%s>", nodus->name);
 }
 
-void sic_save_format_fp(FILE *fp, sic_doc_ptr_t doc,
-                        const char *codificatio, int forma)
-{
-    if (!fp || !doc) return;
+void sic_save_format_fp(
+    FILE *fp, sic_doc_ptr_t doc,
+    const char *codificatio, int forma
+) {
+    if (!fp || !doc)
+        return;
 
-    fprintf(fp, "<?xml version=\"%s\"",
-        doc->version ? (const char *)doc->version : "1.0");
+    fprintf(
+        fp, "<?xml version=\"%s\"",
+        doc->version ? (const char *)doc->version : "1.0"
+    );
     if (codificatio)
         fprintf(fp, " encoding=\"%s\"", codificatio);
     else if (doc->encoding)
@@ -1051,15 +1235,19 @@ void sic_save_format_fp(FILE *fp, sic_doc_ptr_t doc,
 
     for (sic_node_ptr_t c = doc->children; c; c = c->next)
         w_nodus(fp, c, 0, forma);
-    if (forma) fputc('\n', fp);
+    if (forma)
+        fputc('\n', fp);
 }
 
-int sic_save_format_file_enc(const char *via, sic_doc_ptr_t doc,
-                             const char *codificatio, int forma)
-{
-    if (!via || !doc) return -1;
+int sic_save_format_file_enc(
+    const char *via, sic_doc_ptr_t doc,
+    const char *codificatio, int forma
+) {
+    if (!via || !doc)
+        return -1;
     FILE *fp = fopen(via, "w");
-    if (!fp) return -1;
+    if (!fp)
+        return -1;
     sic_save_format_fp(fp, doc, codificatio, forma);
     fclose(fp);
     return 0;

@@ -96,8 +96,10 @@ struct sic_doc {
 sic_doc_ptr_t  sic_new_doc(const sic_char_t *versio);
 void           sic_free_doc(sic_doc_ptr_t doc);
 sic_node_ptr_t sic_doc_get_root_element(sic_doc_ptr_t doc);
-sic_node_ptr_t sic_doc_set_root_element(sic_doc_ptr_t doc,
-                                        sic_node_ptr_t radix);
+sic_node_ptr_t sic_doc_set_root_element(
+    sic_doc_ptr_t doc,
+    sic_node_ptr_t radix
+);
 
 /* ================================================================
  * functiones — nodi
@@ -105,16 +107,24 @@ sic_node_ptr_t sic_doc_set_root_element(sic_doc_ptr_t doc,
 
 sic_node_ptr_t sic_new_node(sic_ns_ptr_t ns, const sic_char_t *nomen);
 sic_node_ptr_t sic_new_text(const sic_char_t *contentum);
-sic_node_ptr_t sic_new_child(sic_node_ptr_t parens, sic_ns_ptr_t ns,
-                             const sic_char_t *nomen,
-                             const sic_char_t *contentum);
-sic_node_ptr_t sic_new_text_child(sic_node_ptr_t parens, sic_ns_ptr_t ns,
-                                  const sic_char_t *nomen,
-                                  const sic_char_t *contentum);
-sic_node_ptr_t sic_add_child(sic_node_ptr_t parens,
-                             sic_node_ptr_t filius);
-sic_node_ptr_t sic_add_prev_sibling(sic_node_ptr_t frater,
-                                    sic_node_ptr_t novus);
+sic_node_ptr_t sic_new_child(
+    sic_node_ptr_t parens, sic_ns_ptr_t ns,
+    const sic_char_t *nomen,
+    const sic_char_t *contentum
+);
+sic_node_ptr_t sic_new_text_child(
+    sic_node_ptr_t parens, sic_ns_ptr_t ns,
+    const sic_char_t *nomen,
+    const sic_char_t *contentum
+);
+sic_node_ptr_t sic_add_child(
+    sic_node_ptr_t parens,
+    sic_node_ptr_t filius
+);
+sic_node_ptr_t sic_add_prev_sibling(
+    sic_node_ptr_t frater,
+    sic_node_ptr_t novus
+);
 void           sic_unlink_node(sic_node_ptr_t nodus);
 void           sic_free_node(sic_node_ptr_t nodus);
 
@@ -122,31 +132,45 @@ void           sic_free_node(sic_node_ptr_t nodus);
  * functiones — proprietates
  * ================================================================ */
 
-sic_char_t    *sic_get_prop(sic_node_ptr_t nodus,
-                            const sic_char_t *nomen);
-sic_char_t    *sic_get_ns_prop(sic_node_ptr_t nodus,
-                               const sic_char_t *nomen,
-                               const sic_char_t *href);
-sic_attr_ptr_t sic_set_prop(sic_node_ptr_t nodus,
-                            const sic_char_t *nomen,
-                            const sic_char_t *valor);
-sic_attr_ptr_t sic_set_ns_prop(sic_node_ptr_t nodus, sic_ns_ptr_t ns,
-                               const sic_char_t *nomen,
-                               const sic_char_t *valor);
-int            sic_unset_prop(sic_node_ptr_t nodus,
-                              const sic_char_t *nomen);
+sic_char_t    *sic_get_prop(
+    sic_node_ptr_t nodus,
+    const sic_char_t *nomen
+);
+sic_char_t    *sic_get_ns_prop(
+    sic_node_ptr_t nodus,
+    const sic_char_t *nomen,
+    const sic_char_t *href
+);
+sic_attr_ptr_t sic_set_prop(
+    sic_node_ptr_t nodus,
+    const sic_char_t *nomen,
+    const sic_char_t *valor
+);
+sic_attr_ptr_t sic_set_ns_prop(
+    sic_node_ptr_t nodus, sic_ns_ptr_t ns,
+    const sic_char_t *nomen,
+    const sic_char_t *valor
+);
+int            sic_unset_prop(
+    sic_node_ptr_t nodus,
+    const sic_char_t *nomen
+);
 
 /* ================================================================
  * functiones — spatia nominum
  * ================================================================ */
 
-sic_ns_ptr_t sic_new_ns(sic_node_ptr_t nodus,
-                        const sic_char_t *href,
-                        const sic_char_t *praefixum);
+sic_ns_ptr_t sic_new_ns(
+    sic_node_ptr_t nodus,
+    const sic_char_t *href,
+    const sic_char_t *praefixum
+);
 void         sic_set_ns(sic_node_ptr_t nodus, sic_ns_ptr_t ns);
-sic_ns_ptr_t sic_search_ns_by_href(sic_doc_ptr_t doc,
-                                   sic_node_ptr_t nodus,
-                                   const sic_char_t *href);
+sic_ns_ptr_t sic_search_ns_by_href(
+    sic_doc_ptr_t doc,
+    sic_node_ptr_t nodus,
+    const sic_char_t *href
+);
 
 /* ================================================================
  * functiones — chordae et memoria
@@ -160,14 +184,20 @@ void        sic_free(void *ptr);
  * functiones — legere et scribere
  * ================================================================ */
 
-sic_doc_ptr_t sic_read_file(const char *via,
-                            const char *codificatio,
-                            int optiones);
+sic_doc_ptr_t sic_read_file(
+    const char *via,
+    const char *codificatio,
+    int optiones
+);
 
-void sic_save_format_fp(FILE *fp, sic_doc_ptr_t doc,
-                        const char *codificatio, int forma);
+void sic_save_format_fp(
+    FILE *fp, sic_doc_ptr_t doc,
+    const char *codificatio, int forma
+);
 
-int sic_save_format_file_enc(const char *via, sic_doc_ptr_t doc,
-                             const char *codificatio, int forma);
+int sic_save_format_file_enc(
+    const char *via, sic_doc_ptr_t doc,
+    const char *codificatio, int forma
+);
 
 #endif /* SIC_H */
