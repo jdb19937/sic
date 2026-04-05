@@ -1791,6 +1791,7 @@ int main(void)
     proba_apices_singuli();
     proba_scriptor_ns();
 
+#if 0
     /* purga plicas temporales */
     remove("artifacta/sic_proba1.xml");
     remove("artifacta/sic_ent.xml");
@@ -1814,6 +1815,7 @@ int main(void)
     remove("artifacta/sic_ord.xml");
     remove("artifacta/sic_ap.xml");
     remove("artifacta/sic_wns.xml");
+#endif
 
     printf(
         "\n%d/%d probationes transierunt.\n",
