@@ -28,12 +28,14 @@ siclint: siclint.c $(BIBLIOTHECA)
 
 proba: $(BIBLIOTHECA) proba.c
 	$(CC) $(CFLAGS) proba.c -L. -lsic -o proba
+	@mkdir -p artifacta
 	./proba
 
 purga:
 	rm -f $(OBJECTA) $(BIBLIOTHECA) siclint proba
+	rm -rf artifacta
 
 linte:
-	insinulint -c sic.c sic.h siclint.c
+	insinulint -c sic.c sic.h siclint.c proba.c
 
 .PHONY: omnia proba purga
