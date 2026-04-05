@@ -97,19 +97,27 @@ static void w_escaped(FILE *fp, const sic_char_t *s, int attr)
         return;
     for (; *s; s++) {
         switch (*s) {
-        case '&': fputs("&amp;", fp);  break;
-        case '<': fputs("&lt;", fp);   break;
-        case '>': if (!attr)
+        case '&':
+            fputs("&amp;", fp);
+            break;
+        case '<':
+            fputs("&lt;", fp);
+            break;
+        case '>':
+            if (!attr)
                 fputs("&gt;", fp);
             else
                 fputc(*s, fp);
             break;
-        case '"': if (attr)
+        case '"':
+            if (attr)
                 fputs("&quot;", fp);
             else
                 fputc(*s, fp);
             break;
-        default:  fputc(*s, fp);       break;
+        default:
+            fputc(*s, fp);
+            break;
         }
     }
 }
