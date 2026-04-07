@@ -26,10 +26,12 @@ siclint: siclint.c $(BIBLIOTHECA)
 	$(CC) $(CFLAGS) $< -L. -lsic -o $@
 	@echo "==> siclint aedificatum"
 
-proba: $(BIBLIOTHECA) proba.c
-	$(CC) $(CFLAGS) proba.c -L. -lsic -o proba
+proba_prima: $(BIBLIOTHECA) proba_prima.c
+	$(CC) $(CFLAGS) proba_prima.c -L. -lsic -o proba_prima
 	@mkdir -p artifacta
-	./proba
+
+proba: proba_prima
+	./proba_prima
 
 PREFIX = /opt/apotheca
 
@@ -40,10 +42,10 @@ colloca: omnia
 	install -m 644 sic.h $(PREFIX)/include/sic/
 
 purga:
-	rm -f $(OBJECTA) $(BIBLIOTHECA) siclint proba
+	rm -f $(OBJECTA) $(BIBLIOTHECA) siclint proba_prima
 	rm -rf artifacta
 
 linte:
-	insinulint -c sic.c sic.h siclint.c proba.c
+	insinulint -c sic.c sic.h siclint.c proba_prima.c
 
 .PHONY: omnia colloca proba purga
