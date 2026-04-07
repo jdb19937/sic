@@ -31,6 +31,14 @@ proba: $(BIBLIOTHECA) proba.c
 	@mkdir -p artifacta
 	./proba
 
+PREFIX = /opt/apotheca
+
+colloca: omnia
+	install -d $(PREFIX)/bin $(PREFIX)/lib $(PREFIX)/include/sic
+	install -m 755 siclint $(PREFIX)/bin/
+	install -m 644 $(BIBLIOTHECA) $(PREFIX)/lib/
+	install -m 644 sic.h $(PREFIX)/include/sic/
+
 purga:
 	rm -f $(OBJECTA) $(BIBLIOTHECA) siclint proba
 	rm -rf artifacta
@@ -38,4 +46,4 @@ purga:
 linte:
 	insinulint -c sic.c sic.h siclint.c proba.c
 
-.PHONY: omnia proba purga
+.PHONY: omnia colloca proba purga
