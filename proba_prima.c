@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #define SC (const sic_char_t *)
 static int num_probationes = 0;
@@ -1750,6 +1751,8 @@ static void proba_scriptor_ns(void)
  * ================================================================ */
 int main(void)
 {
+    mkdir("artifacta", 0755);
+
     printf("SIC probationes:\n");
     proba_crea_documentum();
     proba_lege_et_naviga();

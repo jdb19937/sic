@@ -1,5 +1,7 @@
 siclint
 proba_prima
+siclint.o
+proba_prima.o
 libsic.a
 *.o
 cancer/target/

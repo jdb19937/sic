@@ -5,10 +5,7 @@
 #   make -f Faceplica proba      — curre probationes
 #   make -f Faceplica purga      — dele omnia aedificata
 
-CC       ?= cc
-AR       ?= ar
-CFLAGS   ?= -Wall -Wextra -pedantic -std=c99 -O2
-
+PREFIX      = /opt/apotheca
 FONTES      = sic.c
 OBJECTA     = $(FONTES:.c=.o)
 BIBLIOTHECA = libsic.a
@@ -16,24 +13,21 @@ BIBLIOTHECA = libsic.a
 omnia: $(BIBLIOTHECA) siclint
 
 %.o: %.c sic.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	ccc $<
 
 $(BIBLIOTHECA): $(OBJECTA)
-	$(AR) rcs $@ $(OBJECTA)
+	ar rcs $@ $^
 	@echo "==> $(BIBLIOTHECA) aedificata"
 
-siclint: siclint.c $(BIBLIOTHECA)
-	$(CC) $(CFLAGS) $< -L. -lsic -o $@
+siclint: siclint.o $(BIBLIOTHECA)
+	ldi $^
 	@echo "==> siclint aedificatum"
 
-proba_prima: $(BIBLIOTHECA) proba_prima.c
-	$(CC) $(CFLAGS) proba_prima.c -L. -lsic -o proba_prima
-	@mkdir -p artifacta
+proba_prima: proba_prima.o $(BIBLIOTHECA)
+	ldi $^
 
 proba: proba_prima
 	./proba_prima
-
-PREFIX = /opt/apotheca
 
 colloca: omnia
 	install -d $(PREFIX)/bin $(PREFIX)/lib $(PREFIX)/include/sic
@@ -43,6 +37,7 @@ colloca: omnia
 
 purga:
 	rm -f $(OBJECTA) $(BIBLIOTHECA) siclint proba_prima
+	rm -f proba_prima.o siclint.o
 	rm -rf artifacta
 
 linte:
